@@ -21,17 +21,15 @@ type QueryResp struct {
 //store value and time in UnixNano
 type details []interface{}
 
-type FuncGetValue func() map[string]string
-
 func InitSearch()[]string{
-	key := os.Getenv("gfana.key")
+	key := os.Getenv("GFANA_FIELDS")
 	if key == "" {
-		log.Fatalln("Cannot read gfana.key")
+		log.Fatalln("Cannot read GFANA_FIELDS, stop server..")
 	}
 	return strings.Split(key, ",")
 }
 
-func Query(get FuncGetValue) []QueryResp{
+func Query(get func() map[string]string) []QueryResp{
 	m := get()
 	resp := make([]QueryResp, len(m))
 	count := 0

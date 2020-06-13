@@ -7,13 +7,11 @@ import (
 	"net/http"
 )
 
-func New(router *chi.Mux, valueFunc pkg.FuncGetValue){
+func New(router *chi.Mux, valueFunc func() map[string]string){
 	router.Get("/", checkHealth)
 	router.Post("/search", search)
 	router.Post("/query", func(w http.ResponseWriter, r *http.Request) {
-		result := pkg.Query(valueFunc)
-		w.Header().Set("content-type", "application/json")
-		json.NewEncoder(w).Encode(&result)
+		resp(w, pkg.Query(valueFunc))
 	})
 }
 
@@ -22,6 +20,10 @@ func checkHealth(w http.ResponseWriter, r *http.Request){
 }
 
 func search(w http.ResponseWriter, r *http.Request){
+	resp(w, pkg.InitSearch())
+}
+
+func resp(w http.ResponseWriter, resp interface{}){
 	w.Header().Set("content-type","application/json")
-	json.NewEncoder(w).Encode(pkg.InitSearch())
+	json.NewEncoder(w).Encode(resp)
 }
