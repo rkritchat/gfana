@@ -1,6 +1,6 @@
 ## Installation
 ```shell
-github.com/rkritchat/gfana
+go get -u github.com/rkritchat/gfana
 ```
 
 ## Usage
